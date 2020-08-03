@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+from django.contrib.messages import constants
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -37,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
+    # TODO: Manter por último , usar somente em desenv, remover em produção
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +52,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # TODO: Manter por último , usar somente em desenv, remover em produção
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'loja.urls'
@@ -54,7 +62,9 @@ ROOT_URLCONF = 'loja.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,9 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-BR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -118,3 +128,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join('templates/static')
+]
+
+MEDIA_URL = '/media/'
+MEDIA_RROT = os.path.join(BASE_DIR, 'media')
+
+
+MESSAGE_TAGS = {
+    constants.DEBUG: 'alert-debug',
+    constants.INFO: 'alert-info',
+    constants.ERROR: 'alert-error',
+    constants.WARNING: 'alert-warning',
+    constants.SUCCESS: 'alert-success',
+}
+
+# Tempo de essão: 60s * 60m * 24h * 1d
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7       # Uma semana
+# SESSION_COOKIE_AGE = 60 * 60 * 24 * 30    # 30 dias
+
+# Salvar sessão automaticamente
+SESSION_SAVE_EVERY_REQUEST = False
+
+# Serializer - JSON
+# SESSION_SERIALIZER = 'django.contrib.sessions.serializer.PickleSerializer'
+
+# TODO: Manter por último , usar somente em desenv, remover em produção
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
